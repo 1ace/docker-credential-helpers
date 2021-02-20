@@ -3,7 +3,7 @@ FROM ubuntu:xenial
 ARG VERSION
 ARG DISTRO
 
-RUN apt-get update && apt-get install -yy debhelper dh-make golang-go libsecret-1-dev
+RUN apt-get update && apt-get install -yy debhelper dh-make golang-go lastpass-cli libsecret-1-dev
 RUN mkdir -p /build
 
 WORKDIR /build
@@ -11,6 +11,7 @@ ENV GOPATH /build
 
 COPY Makefile .
 COPY credentials credentials
+COPY lastpass lastpass
 COPY secretservice secretservice
 COPY pass pass
 COPY deb/debian ./debian

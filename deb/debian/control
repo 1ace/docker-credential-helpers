@@ -10,6 +10,13 @@ Build-Depends: debhelper
   , dh-make
   , libsecret-1-dev
 
+Package: docker-credential-lastpass
+Architecture: any
+Depends: lastpass-cli
+  , ${misc:Depends}
+Description: docker-credential-lastpass is a credential helper backend
+ which uses the lpass utility to keep Docker credentials safe.
+
 Package: docker-credential-secretservice
 Architecture: any
 Depends: libsecret-1-0
