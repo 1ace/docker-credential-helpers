@@ -1,4 +1,4 @@
-.PHONY: all deps osxkeychain secretservice test validate wincred pass deb
+.PHONY: all deps osxkeychain secretservice test validate wincred pass lastpass deb
 
 TRAVIS_OS_NAME ?= linux
 VERSION := $(shell grep 'const Version' credentials/version.go | awk -F'"' '{ print $$2 }')
@@ -21,6 +21,10 @@ osxcodesign: osxkeychain
 	xcrun -log codesign -s $(SIGNINGHASH) --force --verbose bin/docker-credential-osxkeychain
 	xcrun codesign --verify --deep --strict --verbose=2 --display bin/docker-credential-osxkeychain
 
+lastpass:
+	mkdir -p bin
+	go build -o bin/docker-credential-lastpass lastpass/cmd/main_linux.go
+
 secretservice:
 	mkdir -p bin
 	go build -o bin/docker-credential-secretservice secretservice/cmd/main_linux.go
@@ -35,6 +39,7 @@ wincred:
 
 linuxrelease:
 	mkdir -p release
+	cd bin && tar cvfz ../release/docker-credential-lastpass-v$(VERSION)-amd64.tar.gz docker-credential-lastpass
 	cd bin && tar cvfz ../release/docker-credential-pass-v$(VERSION)-amd64.tar.gz docker-credential-pass
 	cd bin && tar cvfz ../release/docker-credential-secretservice-v$(VERSION)-amd64.tar.gz docker-credential-secretservice
 
@@ -60,6 +65,7 @@ vet_osx:
 	go vet ./osxkeychain
 
 vet_linux:
+	go vet ./lastpass
 	go vet ./secretservice
 
 lint:
